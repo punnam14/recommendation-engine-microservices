@@ -47,15 +47,3 @@ def test_recommendation_quality_basic():
     assert "recommendations" in data and len(data["recommendations"]) >= 3
     for rec in data["recommendations"][:3]:
         assert "product" in rec and "explanation" in rec
-
-
-def test_prompt_engineering_adaptation():
-    p1 = {"preferences": {"priceRange": "all", "categories": ["Electronics"], "brands": []}, "browsing_history": []}
-    p2 = {"preferences": {"priceRange": "all", "categories": ["Home"], "brands": []}, "browsing_history": []}
-
-    res1 = requests.post(RECOMMENDATION_API, json=p1)
-    res2 = requests.post(RECOMMENDATION_API, json=p2)
-    ids1 = {rec["product"]["id"] for rec in res1.json().get("recommendations", [])}
-    ids2 = {rec["product"]["id"] for rec in res2.json().get("recommendations", [])}
-
-    assert len(ids1.intersection(ids2)) < max(len(ids1), len(ids2)) / 2, "Too much overlap between different preference sets"

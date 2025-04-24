@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Catalog from '../components/Catalog';
+import '@testing-library/jest-dom';
 
 test('renders a product card', () => {
   const product = {

@@ -1,7 +1,6 @@
-const PRODUCT_API = 'http://localhost:5001/products';
-const RECOMMENDATION_API = 'http://localhost:5002/recommendations';
+const PRODUCT_API = process.env.REACT_APP_PRODUCT_API;
+const RECOMMENDATION_API = process.env.REACT_APP_RECOMMENDATION_API;
 
-// const API_BASE_URL = 'http://localhost:4000/api';
 // const API_BASE_URL = 'https://product-recommendation-engine.onrender.com/api';
 
 // Fetch all products from the API

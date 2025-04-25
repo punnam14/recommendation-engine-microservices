@@ -1,9 +1,9 @@
-name: SemVer and Trigger Infra Build for frontend Service
+name: SemVer and Trigger Infra Build for Product Service
 
 on:
   push:
     paths:
-      - 'frontend-service/**'
+      - 'product-service/**'
     branches:
       - main
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend-service
+        working-directory: ./product-service
 
     steps:
       - name: Checkout Code
@@ -26,15 +26,22 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Bump Version with Standard Version
+      - name: Bump Version (using .version file)
         run: |
-          npx standard-version
-          git push --follow-tags origin main
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          CURRENT_VERSION=$(cat .version 2>/dev/null || echo "0.0.0")
+          echo "Current version: $CURRENT_VERSION"
+          
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
+          PATCH=$((PATCH + 1))
+          NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Next version: $NEXT_VERSION"
+
+          echo "$NEXT_VERSION" > .version
+          git add .version
+          git commit -m "chore(product): bump version to $NEXT_VERSION"
+          git push origin main
+
+          echo "VERSION=$NEXT_VERSION" >> $GITHUB_ENV
 
       - name: Trigger Infra Repo Build
         env:
@@ -45,4 +52,4 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d '{"event_type":"build-frontend", "client_payload":{"version":"v'"$VERSION"'"}}'
+            -d '{"event_type":"build-product", "client_payload":{"version":"'"$VERSION"'"}}'

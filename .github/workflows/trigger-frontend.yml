@@ -1,0 +1,52 @@
+name: Trigger Frontend Build
+
+on:
+  push:
+    paths:
+      - 'frontend-service/**'
+    branches: [main]
+
+jobs:
+  validate-and-dispatch:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend-service
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Conventional Commit Message
+        uses: amannn/action-semantic-pull-request@v5
+        with:
+          types: |
+            feat
+            fix
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            revert
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Bump Version with Standard Version
+        run: |
+          npx standard-version --skip.tag --skip.commit
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Trigger Infra Repo Build
+        run: |
+          curl -X POST https://api.github.com/repos/punnam14/recommendation-engine-infra-repo/dispatches \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.INFRA_PAT }}" \
+            -d "{\"event_type\": \"build-frontend\", \"client_payload\": {\"version\": \"v${{ env.VERSION }}\"}}"

@@ -1,0 +1,33 @@
+name: Validate PR Commit Messages
+
+on:
+  pull_request:
+    paths:
+      - 'frontend-service/**'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-conventional-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Conventional Commits
+        uses: amannn/action-semantic-pull-request@v5
+        with:
+          types: |
+            feat
+            fix
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            revert
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

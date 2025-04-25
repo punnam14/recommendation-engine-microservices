@@ -46,5 +46,5 @@ jobs:
         run: |
           curl -X POST https://api.github.com/repos/punnam14/recommendation-engine-infra-repo/dispatches \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.INFRA_PAT }}" \
+            -H "Authorization: Bearer ${{ secrets.TOKEN_GITHUB }}" \
             -d "{\"event_type\": \"build-frontend\", \"client_payload\": {\"version\": \"v${{ env.VERSION }}\"}}"

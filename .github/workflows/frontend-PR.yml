@@ -3,7 +3,7 @@ name: Validate PR Commit Messages
 on:
   pull_request:
     paths:
-      - 'frontend-service/**'
+      - '**'
     types: [opened, synchronize, reopened]
 
 jobs:

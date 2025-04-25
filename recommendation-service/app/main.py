@@ -36,3 +36,5 @@ async def get_recommendations(req: RecommendationRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# change

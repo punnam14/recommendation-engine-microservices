@@ -1,0 +1,55 @@
+name: SemVer and Trigger Infra Build for Recommendation Service
+
+on:
+  push:
+    paths:
+      - 'recommendation-service/**'
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  version-and-dispatch:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./recommendation-service
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Git Identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump Version (using .version file)
+        run: |
+          CURRENT_VERSION=$(cat .version 2>/dev/null || echo "0.0.0")
+          echo "Current version: $CURRENT_VERSION"
+          
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
+          PATCH=$((PATCH + 1))
+          NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Next version: $NEXT_VERSION"
+
+          echo "$NEXT_VERSION" > .version
+          git add .version
+          git commit -m "chore(recommendation): bump version to $NEXT_VERSION"
+          git push origin main
+
+          echo "VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+
+      - name: Trigger Infra Repo Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          VERSION: ${{ env.VERSION }}
+        run: |
+          curl -X POST https://api.github.com/repos/punnam14/recommendation-engine-infra-repo/dispatches \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d '{"event_type":"build-recommendation", "client_payload":{"version":"'"$VERSION"'"}}'

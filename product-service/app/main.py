@@ -17,3 +17,5 @@ product_service = ProductService()
 @app.get("/products")
 async def get_products():
     return product_service.get_all_products()
+
+# small change

@@ -5,6 +5,7 @@ const RECOMMENDATION_API = process.env.REACT_APP_RECOMMENDATION_API;
 
 // Fetch all products from the API
 export const fetchProducts = async () => {
+  console.log('📦 Fetching products from:', PRODUCT_API);
   try {
     const response = await fetch(PRODUCT_API);
     if (!response.ok) {
@@ -19,6 +20,7 @@ export const fetchProducts = async () => {
 
 // Get recommendations based on user preferences and browsing history
 export const getRecommendations = async (preferences, browsingHistory, allProducts) => {
+  console.log('✨ Sending recommendation request to:', RECOMMENDATION_API); 
   try {
     const response = await fetch(RECOMMENDATION_API, {
       method: 'POST',

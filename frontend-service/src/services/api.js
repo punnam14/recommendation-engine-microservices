@@ -1,5 +1,5 @@
-const PRODUCT_API = process.env.REACT_APP_PRODUCT_API;
-const RECOMMENDATION_API = process.env.REACT_APP_RECOMMENDATION_API;
+const PRODUCT_API = '/products';
+const RECOMMENDATION_API = '/recommendations';
 
 // const API_BASE_URL = 'https://product-recommendation-engine.onrender.com/api';
 

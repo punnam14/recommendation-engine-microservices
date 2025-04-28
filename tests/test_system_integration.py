@@ -1,7 +1,10 @@
 import requests
 
-PRODUCT_API = "http://localhost:5001/products"
-RECOMMENDATION_API = "http://localhost:5002/recommendations"
+# PRODUCT_API = "http://localhost:5001/products"
+# RECOMMENDATION_API = "http://localhost:5002/recommendations"
+
+PRODUCT_API = "https://qa.hottake.pro/products"
+RECOMMENDATION_API = "https://qa.hottake.pro/recommendations"
 
 def test_endpoints():
     assert requests.get(PRODUCT_API).status_code == 200

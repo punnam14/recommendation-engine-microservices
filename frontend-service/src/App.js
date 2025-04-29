@@ -105,7 +105,7 @@ function App() {
         </div>
         
         <div className="catalog-section">
-          <h2>Product Catalog - Make small change</h2>
+          <h2>Product Catalog - Newest small change</h2>
           <Catalog 
             products={products}
             onProductClick={handleProductClick}

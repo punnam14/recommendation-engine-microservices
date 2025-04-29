@@ -105,7 +105,7 @@ function App() {
         </div>
         
         <div className="catalog-section">
-          <h2>Product Catalog - Remove Products</h2>
+          <h2>Product Catalog - Change this line</h2>
           <Catalog 
             products={products}
             onProductClick={handleProductClick}

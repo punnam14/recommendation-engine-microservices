@@ -105,7 +105,7 @@ function App() {
         </div>
         
         <div className="catalog-section">
-          <h2>Product Catalog - Check UAT again</h2>
+          <h2>Product Catalog - Propogate</h2>
           <Catalog 
             products={products}
             onProductClick={handleProductClick}

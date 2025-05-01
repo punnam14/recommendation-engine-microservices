@@ -30,9 +30,28 @@ jobs:
         run: |
           CURRENT_VERSION=$(cat .version 2>/dev/null || echo "0.0.0")
           echo "Current version: $CURRENT_VERSION"
+
+          git fetch --prune --unshallow
+          COMMITS=$(git log --pretty=format:"%s%n%b" origin/main..HEAD)
+          if echo "$COMMITS" | grep -qE "BREAKING CHANGE|^feat!:"; then
+            BUMP="major"
+          elif echo "$COMMITS" | grep -qE "^feat"; then
+            BUMP="minor"
+          elif echo "$COMMITS" | grep -qE "^fix"; then
+            BUMP="patch"
+          else
+            BUMP="patch"
+          fi
           
           IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
-          PATCH=$((PATCH + 1))
+          if [ "$BUMP" = "major" ]; then
+          MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0
+          elif [ "$BUMP" = "minor" ]; then
+            MINOR=$((MINOR + 1)); PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
           NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
           echo "Next version: $NEXT_VERSION"
 

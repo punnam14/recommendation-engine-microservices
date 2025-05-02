@@ -23,4 +23,3 @@ def test_recommendations_flow():
     assert isinstance(data["recommendations"], list)
     assert all("product" in r for r in data["recommendations"][:3])
 
-# comment

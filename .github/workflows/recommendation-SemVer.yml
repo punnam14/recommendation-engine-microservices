@@ -31,17 +31,10 @@ jobs:
           CURRENT_VERSION=$(cat .version 2>/dev/null || echo "0.0.0")
           echo "Current version: $CURRENT_VERSION"
 
-          git fetch --prune --unshallow
-          COMMITS=$(git log --pretty=format:"%s%n%b" origin/main..HEAD)
-          if echo "$COMMITS" | grep -qE "BREAKING CHANGE|^feat!:"; then
-            BUMP="major"
-          elif echo "$COMMITS" | grep -qE "^feat"; then
-            BUMP="minor"
-          elif echo "$COMMITS" | grep -qE "^fix"; then
-            BUMP="patch"
-          else
-            BUMP="patch"
-          fi
+          npm install -g conventional-recommended-bump
+
+          BUMP=$(conventional-recommended-bump -p angular -r 0 | grep '"releaseType"' | cut -d '"' -f 4)
+          echo "Recommended bump: $BUMP"
 
           IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
           if [ "$BUMP" = "major" ]; then

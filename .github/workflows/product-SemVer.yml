@@ -36,7 +36,7 @@ jobs:
 
           npm install -g conventional-recommended-bump conventional-changelog-angular
 
-          BUMP=$(conventional-recommended-bump -p angular -r 0 | grep '"releaseType"' | cut -d '"' -f 4)
+          BUMP=$(conventional-recommended-bump -p angular | grep '"releaseType"' | cut -d '"' -f 4)
           echo "Recommended bump: $BUMP"
           
           IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"

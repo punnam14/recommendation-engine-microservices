@@ -31,7 +31,7 @@ jobs:
           CURRENT_VERSION=$(cat .version 2>/dev/null || echo "0.0.0")
           echo "Current version: $CURRENT_VERSION"
 
-          npm install -g conventional-recommended-bump
+          npm install -g conventional-recommended-bump conventional-changelog-angular
 
           BUMP=$(conventional-recommended-bump -p angular -r 0 | grep '"releaseType"' | cut -d '"' -f 4)
           echo "Recommended bump: $BUMP"

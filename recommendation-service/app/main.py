@@ -40,5 +40,3 @@ async def get_recommendations(req: RecommendationRequest):
 @app.get("/healthz")
 async def health_check():
     return {"status": "ok"}
-
-# comment
